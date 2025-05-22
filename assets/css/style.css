@@ -1,9 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
+
 :root{
     --cor-de-fundo: #FFDE00;
+    --fundo-cabecalho: #E71D23;
 }
 
 body{
     background-color: var(--cor-de-fundo);
+    font-family: "Play", sans-serif;
+}
+.cabecalho{
+    background-color: var(--fundo-cabecalho);
+    border-radius:0 0 20px 20px;
+}
+
+.cabecalho nav{
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 30px 0;
+}
+.area-logo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 20px 0;
+}
+.area-logo img{
+    max-width: 250px;
+}
+.area-logo h1{
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+.barra-pesquisa {
+    position: relative;
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+.barra-pesquisa input {
+    width: 100%;
+    height: 40px;
+    padding: 10px 40px 10px 15px; /* Espaço para o ícone à direita */
+    border-radius: 15px;
+    border: none;
+    display: block;
+}
+
+.barra-pesquisa::after {
+    content: '';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background: url('/assets/imagens/lupa.png') no-repeat center;
+    background-size: contain;
+    pointer-events: none; /* Permite clicar através do ícone */
+}
+.area-pokemon{
+    padding: 20px;
 }
 .pokemons{
     display: flex;
@@ -11,6 +70,8 @@ body{
     justify-content: center;
     gap: 15px;
     margin: auto 30px;
+    max-width: 1500px;
+    margin: 0 auto;
 }
 .area-topo{
     display: flex;
@@ -30,7 +91,7 @@ li.pokemon{
     align-items: center;
     justify-content: space-between;
     gap: 2px;
-    border-radius: 10px;
+    border-radius: 15px;
     padding: 10px;
     text-transform: capitalize;
     font-family: cursive;
@@ -43,6 +104,14 @@ li.pokemon .fundo-imagem{
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+}
+.fundo-imagem::before{
+    content: "";
+    background: url(../imagens/pokeball.svg);
+    height: 150px;
+    width: 150px;
+    position: absolute;
 }
 .fundo{
     background-color: #000000; 
@@ -72,6 +141,7 @@ li.pokemon img{
 .informacoes small{
     color: gray;
     display: block;
+    margin-left: 5px;
     margin-bottom: 5px;
     margin-right: 5px;
 }
@@ -98,7 +168,6 @@ li.pokemon img{
     color: white;
     font-size: 1.3rem;
     display: inline-block;
-    
 }
 .pokemon:hover{
     background-color: #f1f1f1;
@@ -106,7 +175,84 @@ li.pokemon img{
 .pokemon:hover .seta-abrir{
     transform: translateX(10px);
 }
-
+/* Área Pokemon Hero */
+.pokemon-hero{
+    background-color: rgba(0, 0, 0, 0.329);
+    position: absolute;
+    width: 100%;
+    height: 100vh;    
+    z-index: 99;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.hero{
+    width: 96%;
+    height: 90vh;
+    background-color: white;
+    border-radius: 20px;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 15px;
+    flex-direction: column;
+}
+.area-hero{
+    width: 100%;
+    flex: 1;
+    display: flex;
+    justify-content: space-evenly;
+    overflow: hidden;
+    
+}
+.area-hero img{
+    max-width: 300px;
+    position: relative;
+    left: -50px;
+}
+.hero-info{
+    position: relative;
+    top: 15px;
+    left:20px;
+   color: white;
+   z-index: 3;
+}
+.info .number,
+.info .name{
+    margin-bottom: 10px;   
+}
+.info .name{
+    font-size: 1.4rem;
+}
+.detalhes-hero{
+    padding: 20px;
+}
+.detalhes-hero li{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 10px 0;
+    
+}
+.detalhes-hero li a{
+    color: white;
+    padding: 10px;
+    font-size: 1.2rem;
+    border-bottom: 2px solid black;
+}
+.detalhes-info{
+    display: flex;
+    justify-content: space-evenly;
+    text-align: center;
+    font: 1.5rem;
+    margin: 15px 0;
+}
+.detalhes-info span{
+    display: block;
+    margin-bottom: 5px;
+}
 .water{
     border-color: #6890f0 !important;
     background-color: #6890f0;
@@ -180,12 +326,23 @@ li.pokemon img{
     background-color: #ec9bac;
 }
 
+
 @media(width <700px){
+    .area-pokemon{
+        padding: 15px 0;
+    }
     .pokemons{
         margin: 0 10px;
         gap: 7px;
     }
     .pokemon{
         width: 170px !important;
+    }
+    .barra-pesquisa{
+        padding: 0 20px;
+    }
+    .barra-pesquisa::after {
+    right: 30px;
+    top: 50%;
     }
 }

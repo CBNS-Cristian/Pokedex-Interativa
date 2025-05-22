@@ -3,6 +3,7 @@ const pokeApi = {};
 class Pokemon {
     numero;
     nome;
+    id;
     imagem;
     altura;
     comprimento;
@@ -10,25 +11,50 @@ class Pokemon {
     tipos = [];
 }
 
-function transformarVariavelPokemons(pokemonsDetalhes){
+function transformarVariavelPokemons({primeirosDetalhes, extrasDetalhes}){
     const novoPokemon = new Pokemon()
 
-    novoPokemon.numero = pokemonsDetalhes.order;
-    novoPokemon.nome = pokemonsDetalhes.name;
-    novoPokemon.imagem = pokemonsDetalhes.sprites.other.dream_world.front_default;
-    novoPokemon.altura = pokemonsDetalhes.height;
-    novoPokemon.comprimento = pokemonsDetalhes.weight;
+    // Variável das imagens
+    const artOficial = primeirosDetalhes.sprites.other['official-artwork'].front_default
+    const artSonhos = primeirosDetalhes.sprites.other.dream_world.front_default
+    const artHome = primeirosDetalhes.sprites.other.home.front_default
+    const artGif = primeirosDetalhes.sprites.other.showdown.front_default
+    const artPequena = primeirosDetalhes.sprites.front_default
 
-    const tipos = pokemonsDetalhes.types.map((variosTipos) => variosTipos.type.name);
+    novoPokemon.numero = primeirosDetalhes.order;
+    novoPokemon.nome = primeirosDetalhes.name;
+    novoPokemon.id = primeirosDetalhes.id;
+    novoPokemon.imagem = artSonhos;
+    novoPokemon.altura = primeirosDetalhes.height / 10;
+    novoPokemon.comprimento = primeirosDetalhes.weight / 10;
+
+    const tipos = primeirosDetalhes.types.map((variosTipos) => variosTipos.type.name);
     const {tipo} = tipos
 
     novoPokemon.tipos = tipos
     novoPokemon.tipoPrincipal = tipo
 
+    // Status do Pokemon
+    novoPokemon.hp = primeirosDetalhes.stats.find(response => response.stat.name === 'hp')?.base_stat
+    novoPokemon.ataque = primeirosDetalhes.stats.find(response => response.stat.name === 'attack')?.base_stat
+    novoPokemon.defesa = primeirosDetalhes.stats.find(response => response.stat.name === 'defense')?.base_stat
+    novoPokemon.ataqueEs = primeirosDetalhes.stats.find(response => response.stat.name === 'special-attack')?.base_stat
+    novoPokemon.defesaEs = primeirosDetalhes.stats.find(response => response.stat.name === 'special-defense')?.base_stat
+    novoPokemon.velocidade = primeirosDetalhes.stats.find(response => response.stat.name === 'speed')?.base_stat
+
+    const habilidadeGeral = primeirosDetalhes.abilities.map((response) => response.ability.name)
+    const {habilidadePrincipal} = habilidadeGeral;
+
+    novoPokemon.habilidade = habilidadePrincipal;
+    novoPokemon.habilidades = habilidadeGeral;
+    // Dados Extras, da segunda URL
+    novoPokemon.descricao = extrasDetalhes.flavor_text_entries.find(response => response.language.name === 'en')?.flavor_text
+
+    console.log(novoPokemon)
     return novoPokemon
 }
 function converterPokemon(novoPokemon){
-    return `<li class="pokemon ${novoPokemon.tipos[0]}">
+    return `<li class="pokemon ${novoPokemon.tipos[0]}" id="${novoPokemon.id}">
                 <div class="area-topo">
                         <div class="numeral">#${novoPokemon.numero}</div>
                         <div class="seta-abrir ${novoPokemon.tipos[0]}"></div>
@@ -38,7 +64,7 @@ function converterPokemon(novoPokemon){
                 <img src="${novoPokemon.imagem}" alt="${novoPokemon.nome}">
                 <div class="fundo ${novoPokemon.tipos[0]}"></div>
                 </div>
-
+        
                 <div class="informacoes">
                     <h3 class="name">${novoPokemon.nome}</h3>
                     <div class="extra-info">
@@ -66,10 +92,21 @@ const pokemonOl = document.getElementById('listaPokemon');
 pokeApi.pegarDetalhes = (pokemon) => {
     return fetch(pokemon.url)
         .then((response) => response.json())
-        .then(transformarVariavelPokemons);
+        .then((primeirosDetalhes) => {
+            return fetch(primeirosDetalhes.species.url)
+                .then(response => response.json())
+                .then(extrasDetalhes => {
+                    return {
+                        primeirosDetalhes,
+                        extrasDetalhes
+                    }
+                })
+        })
+        .then(transformarVariavelPokemons)
+  
 }
 
-pokeApi.pegarPokemons = (offset = 0, limite = 20) =>{
+pokeApi.pegarPokemons = (offset = 0, limite = 1 ) =>{
     const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limite}`
 
     return fetch(url)
