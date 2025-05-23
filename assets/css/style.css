@@ -8,6 +8,8 @@
 body{
     background-color: var(--cor-de-fundo);
     font-family: "Play", sans-serif;
+    text-transform: capitalize;
+    user-select: none;
 }
 .cabecalho{
     background-color: var(--fundo-cabecalho);
@@ -30,6 +32,7 @@ body{
 .area-logo img{
     max-width: 250px;
 }
+
 .area-logo h1{
     font-size: 2.5rem;
     font-weight: 700;
@@ -177,53 +180,73 @@ li.pokemon img{
 }
 /* Área Pokemon Hero */
 .pokemon-hero{
-    background-color: rgba(0, 0, 0, 0.329);
+    background-color: #000000ea;
     position: absolute;
     width: 100%;
-    height: 100vh;    
+    height: 102vh;    
     z-index: 99;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
 }
 .hero{
-    width: 96%;
-    height: 90vh;
+    min-width: 350px;
+    width: 30%;
+    height: 80vh;
     background-color: white;
+    color: white;
     border-radius: 20px;
     padding: 10px 0;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    gap: 15px;
+    gap: 5px;
     flex-direction: column;
 }
 .area-hero{
     width: 100%;
-    flex: 1;
     display: flex;
     justify-content: space-evenly;
     overflow: hidden;
-    
+    position: relative;
+}
+.area-hero::before{
+    content: "";
+    background: url(../imagens/pokeball.svg);
+    background-size: cover; 
+    background-repeat: no-repeat;
+    height: 350px;
+    width: 300px;
+    position: absolute;
+    top: 5px;
+    opacity: 0.4;
+    right: -120px;
+    display: block;
 }
 .area-hero img{
-    max-width: 300px;
+    max-width: 100%;
+    max-height: 350px;
     position: relative;
-    left: -50px;
+    left: -65px;
 }
 .hero-info{
     position: relative;
-    top: 15px;
+    top: 10px;
     left:20px;
    color: white;
    z-index: 3;
 }
+
+
 .info .number,
 .info .name{
     margin-bottom: 10px;   
+    font-weight: bold;
+    font-size: 1.3rem;
 }
 .info .name{
     font-size: 1.4rem;
+    
 }
 .detalhes-hero{
     padding: 20px;
@@ -252,6 +275,119 @@ li.pokemon img{
 .detalhes-info span{
     display: block;
     margin-bottom: 5px;
+    color: #000000;
+    font-weight: bold;
+}
+.detalhes-hero p{
+    text-align: center;
+}
+.seta-fechar{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 35px;
+    height: 25px;
+    border-radius: 30px;
+    margin-bottom: 5px;
+    transition: transform 0.4s ease;
+}
+.seta-fechar::after{
+    content: "←";
+    color: white;
+    font-size: 1.3rem;
+    display: inline-block;
+}
+.sub-menu-st{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    gap: 15px;
+    margin: 10px auto;
+}
+.sub-menu-st div{
+    display: flex;
+    justify-content: space-evenly;
+    gap: 5px;
+    width: 100%;
+    align-items: center;
+    position: relative;
+    font-weight: bold;
+}
+.sub-menu-dt p{
+    margin-top: 35px;
+    margin-bottom: 35px;
+    text-transform: none;
+}
+.sub-menu-st progress {
+    height: 20px;
+    width: 250px;
+    border: none;
+    background: #d4d4d488; 
+    border: 1px solid white;
+    border-radius: 10px; 
+    overflow: hidden; 
+}
+.progress-text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centraliza o texto */
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    pointer-events: none; /* Permite clicar na barra */
+}
+.progress-total{
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.sub-menu-st progress::-webkit-progress-bar {
+    background-color: #d4d4d488 !important;
+    border-radius: 10px;
+}
+
+.sub-menu-st progress::-webkit-progress-value {
+    background-color: white !important;
+    border-radius: 10px;
+}
+
+.sub-menu-st progress::-moz-progress-bar {
+    background-color: #d4d4d488 !important;
+    border-radius: 10px;
+}
+
+@media(width <700px){
+    .area-pokemon{
+        padding: 15px 0;
+    }
+    .pokemons{
+        margin: 0 10px;
+        gap: 7px;
+    }
+    .pokemon{
+        width: 170px !important;
+    }
+    .barra-pesquisa{
+        padding: 0 20px;
+    }
+    .barra-pesquisa::after {
+    right: 30px;
+    top: 50%;
+    }
+
+
+    .hero{
+        width: 96%;
+        height: 90vh;
+        padding: 10px 0;
+    }
+    .detalhes-hero{
+        padding-top: 5px;
+    }
+
 }
 .water{
     border-color: #6890f0 !important;
@@ -327,22 +463,7 @@ li.pokemon img{
 }
 
 
-@media(width <700px){
-    .area-pokemon{
-        padding: 15px 0;
-    }
-    .pokemons{
-        margin: 0 10px;
-        gap: 7px;
-    }
-    .pokemon{
-        width: 170px !important;
-    }
-    .barra-pesquisa{
-        padding: 0 20px;
-    }
-    .barra-pesquisa::after {
-    right: 30px;
-    top: 50%;
-    }
+.no-scroll {
+    overflow: hidden !important;
+
 }
