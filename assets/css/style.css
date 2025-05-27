@@ -189,10 +189,11 @@ li.pokemon img{
     justify-content: center;
     align-items: center;
 }
+
 .hero{
     min-width: 350px;
     width: 30%;
-    height: 80vh;
+    height: 700px;
     background-color: white;
     color: white;
     border-radius: 20px;
@@ -202,42 +203,63 @@ li.pokemon img{
     align-items: center;
     gap: 5px;
     flex-direction: column;
+    position: relative;
 }
 .area-hero{
     width: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    z-index: 20;
     display: flex;
     justify-content: space-evenly;
     overflow: hidden;
-    position: relative;
+    position: absolute;
+}
+.detalhes-hero{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 10px 15px;
+    height: 50%; /* Ajuste conforme necessário */
+    z-index: 10; /* Camada inferior */
+    background: rgb(141, 140, 140); 
+    border-radius: 30px 30px 0 0;
 }
 .area-hero::before{
     content: "";
     background: url(../imagens/pokeball.svg);
     background-size: cover; 
     background-repeat: no-repeat;
-    height: 350px;
+    height: 300px;
     width: 300px;
     position: absolute;
     top: 5px;
     opacity: 0.4;
     right: -120px;
     display: block;
+    z-index: 1;
 }
 .area-hero img{
     max-width: 100%;
-    max-height: 350px;
+    min-height: 300px;
+    max-height: 380px;
     position: relative;
     left: -65px;
+    z-index: 3;
 }
 .hero-info{
     position: relative;
     top: 10px;
     left:20px;
    color: white;
-   z-index: 3;
+   z-index: 10;
 }
-
-
 .info .number,
 .info .name{
     margin-bottom: 10px;   
@@ -248,29 +270,41 @@ li.pokemon img{
     font-size: 1.4rem;
     
 }
-.detalhes-hero{
-    padding: 20px;
-}
+
 .detalhes-hero li{
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 15px;
     margin: 10px 0;
-    
+    border-radius: 50%;
 }
 .detalhes-hero li a{
     color: white;
     padding: 10px;
-    font-size: 1.2rem;
-    border-bottom: 2px solid black;
+    font-size: 1.3rem;  
+    display: block;
+    
+}
+.detalhes-hero a.active{
+    border-bottom: 2px solid gold;
 }
 .detalhes-info{
     display: flex;
     justify-content: space-evenly;
+    flex-wrap: wrap !important;
+    gap: 10px;
     text-align: center;
-    font: 1.5rem;
-    margin: 15px 0;
+    font-size: 1.1rem;
+    margin: 5px 0;
+    border-bottom: 3px solid #00000080;
+    border-radius: 3px;
+    padding-bottom: 5px;
+}
+.detalhes-info div{
+    padding: 3px;
+    border-left: 1px solid #0000005d;
+    border-right: 1px solid #0000005d;
 }
 .detalhes-info span{
     display: block;
@@ -280,25 +314,32 @@ li.pokemon img{
 }
 .detalhes-hero p{
     text-align: center;
+    font-size: 1rem;
 }
 .seta-fechar{
     display: flex;
-    justify-content: left;
+    justify-content: center;
     align-items: center;
     width: 35px;
-    height: 25px;
+    height: 35px;
+    padding: 2px 10px;
     border-radius: 30px;
+    margin-top: 5px;
     margin-bottom: 5px;
     transition: transform 0.4s ease;
+    cursor: pointer;
+    background-color: #d8d8d8;
+    border-radius: 20px;
 }
 .seta-fechar::after{
     content: "←";
     color: white;
-    font-size: 1.3rem;
+    font-size: 2rem;
     display: inline-block;
+    
 }
 .sub-menu-st{
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
@@ -315,9 +356,16 @@ li.pokemon img{
     position: relative;
     font-weight: bold;
 }
+.sub-menu-dt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 100%;
+}
 .sub-menu-dt p{
-    margin-top: 35px;
-    margin-bottom: 35px;
+    font-size: 1rem;
+    margin: 16px 0;
     text-transform: none;
 }
 .sub-menu-st progress {
@@ -358,8 +406,58 @@ li.pokemon img{
     background-color: #d4d4d488 !important;
     border-radius: 10px;
 }
+/* Paginação */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+    padding: 10px;
+}
+
+.pagination button {
+    padding: 8px 16px;
+    border: none;
+    background-color: #3a5da8;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pagination button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 5px;
+}
+
+.numeroDePaginas {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.numeroDePaginas.active {
+    background-color: var(--fundo-cabecalho);
+    color: white;
+    border-color: var(--fundo-cabecalho);
+}
 
 @media(width <700px){
+    .page-numbers {
+        gap: 6px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .numeroDePaginas {
+    padding: 5px 9px;
+    }
     .area-pokemon{
         padding: 15px 0;
     }
@@ -377,15 +475,28 @@ li.pokemon img{
     right: 30px;
     top: 50%;
     }
-
-
     .hero{
         width: 96%;
         height: 90vh;
         padding: 10px 0;
     }
+    .sub-menu-dt{
+        height: 70%;
+    }
+
     .detalhes-hero{
+        margin-top: 0;
         padding-top: 5px;
+        padding: 5px 10px;
+        justify-content: flex-start;
+    }
+    .detalhes-info{
+        font-size: 1rem;
+        gap: 10px;
+        margin-bottom: 0;
+    }
+    .detalhes-hero p{
+        font-size: 0.8rem;
     }
 
 }
@@ -401,11 +512,11 @@ li.pokemon img{
     border-color: #78c850 !important;
     background-color: #78c850;
 }
-.electr{
+.electric{
     border-color: #f8d030 !important;
     background-color: #f8d030;
 }
-.psychc{
+.psychic{
     border-color: #f85888 !important;
     background-color: #f85888;
 }

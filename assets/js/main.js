@@ -11,6 +11,9 @@ class Pokemon {
     tipos = [];
 }
 
+// JS Mudar Detalhes e Status
+
+
 function transformarVariavelPokemons({primeirosDetalhes, extrasDetalhes}){
     const novoPokemon = new Pokemon()
 
@@ -52,9 +55,11 @@ function transformarVariavelPokemons({primeirosDetalhes, extrasDetalhes}){
     // Dados Extras, da segunda URL
     novoPokemon.descricao = extrasDetalhes.flavor_text_entries.find(response => response.language.name === 'en')?.flavor_text
     novoPokemon.categoria = extrasDetalhes.genera.find(response => response.language.name === 'en')?.genus
-    
+
+    novoPokemon.descricao.split('\n').map(paragrafo => paragrafo.trim())
+
     novoPokemon.felicidade = extrasDetalhes.base_happiness  
-    novoPokemon.habitate = extrasDetalhes.habitat.name
+    novoPokemon.habitate = extrasDetalhes.habitat?.name || 'unknown';
     return novoPokemon
 }
 
@@ -74,21 +79,23 @@ function converterPokemonHero(pokemonHero){
 
             <div class="detalhes-hero">
                 <li>
-                    <a href="#">Details</a>
-                    <a href="#">Status</a>
-                    <a href="#">Evolutions</a>
+                    <a href="#" id='detalhe-hero' class="active">Details</a>
+                    <a href="#" id='status-hero'>Status</a>
                 </li>
                 <div class="sub-menu-dt">
                     <div class="detalhes-info">
-                        <div class="altura"><span>Altura</span>${pokemonHero.altura}</div>
-                        <div class="peso"><span>Peso</span> ${pokemonHero.comprimento}</div>
+                        <div class="altura"><span>Altura</span>${pokemonHero.altura}m</div>
+                        <div class="peso"><span>Peso</span> ${pokemonHero.comprimento}Kg</div>
                         <div class="categoria"><span>Categoria</span> ${pokemonHero.categoria}</div>
                         <div class="altura"><span>Habilidade</span>${pokemonHero.habilidades[0]}</div>
                     </div>
-                    <p>
-                        ${pokemonHero.descricao}
-                    </p>
-
+                    
+                    <p>${pokemonHero.descricao
+                            .replace(/\n|\f/g, ' ')
+                            .replace(/\s+/g, ' ')
+                            .trim()
+                    }</p>
+                    
                    <div class="detalhes-info">
                         <div class="altura"><span>Felicidade Base</span>${pokemonHero.felicidade}</div>
                         <div class="peso"><span>Exper. Base</span> ${pokemonHero.experiencia}</div>
@@ -128,13 +135,6 @@ function converterPokemonHero(pokemonHero){
                     </div>
                 </div>
 
-                <div class="sub-menu-ev">
-                    <img src="#" alt="">
-                    <span>Próximo</span>
-                    <img src="#" alt="">
-                    <span>Próximo</span>
-                    <img src="#" alt="">
-                </div>
             </div>
         </div>`
 }
@@ -172,6 +172,133 @@ function converterPokemon(novoPokemon){
             
 }
 
+// JS da Paginação
+
+let paginaAtual = 1;
+const itensPorPagina = 20;
+let totalPaginas = 0;
+
+function carregarPokemons(pagina = 1){
+    const offset = (pagina - 1) * itensPorPagina;
+
+    pokeApi.pegarPokemons(offset, itensPorPagina).then((pokemons = []) => {
+            pokemonOl.innerHTML = pokemons.map(converterPokemon).join('');
+            abrirPokemon.innerHTML = pokemons.map(converterPokemonHero).join('');
+            
+            paginaAtual = pagina;
+            atualizarBotoesPagina()
+            carregarHeroPokemon()
+        })
+
+}
+
+function mudarStatusDetalhes() {
+    const detalheHero = document.getElementById('detalhe-hero');
+    const statusHero = document.getElementById('status-hero');
+    
+
+    if (statusHero && detalheHero) {
+
+        statusHero.addEventListener('click', (e) => {
+            e.preventDefault(); 
+          const menuDetalhes = document.querySelector('.sub-menu-dt')
+            if(menuDetalhes){
+                menuDetalhes.style.display = 'none'
+            }
+            
+            e.currentTarget.classList.toggle('active');
+            
+            console.log('Status ativado!');
+        });
+
+        console.log(statusHero, detalheHero)
+    } else {
+        console.error('Elementos não encontrados!', {
+            detalheHero: !!detalheHero,
+            statusHero: !!statusHero
+        });
+    }
+}
+
+function carregarHeroPokemon(){
+    const pokemonCardHero = document.querySelectorAll('.pokemon');
+
+    pokemonCardHero.forEach(card => {
+        card.addEventListener('click', (e) => {
+            const pokemonCard = e.currentTarget;
+            const pokemonId = parseInt(pokemonCard.id);
+           
+            pokeApi.pegarDetalhes({ url: `https://pokeapi.co/api/v2/pokemon/${pokemonId}/` })
+                .then((pokemon) => {
+                    openPokemonHero(pokemon);
+                    mudarStatusDetalhes();
+                });
+        });
+    });
+
+} 
+function atualizarBotoesPagina(){
+    const btnAnterior = document.querySelector('.botao-voltar');
+    const btnProximo = document.querySelector('.botao-proximo');
+
+    btnAnterior.disabled = paginaAtual === 1;
+    btnProximo.disabled = paginaAtual === totalPaginas
+    atualizarNumerosPaginas()
+}
+
+function atualizarNumerosPaginas(){
+    const container = document.querySelector('#numeroDePaginas');
+    container.innerHTML = '';
+
+    let paginaInicial = Math.max(1, paginaAtual - 2);
+    let paginaFinal = Math.min(totalPaginas, paginaAtual + 4);
+
+    const mostrarPaginas = paginaFinal - paginaInicial;
+    if(mostrarPaginas < 4 && paginaInicial > 1){
+        paginaInicial = Math.max(1, paginaFinal - 4);
+    }
+
+    for(let i = paginaInicial; i <= paginaFinal; i++){
+        const numeroPagina = document.createElement('div')
+        numeroPagina.classList.add('numeroDePaginas');
+        if(i === paginaAtual){
+            numeroPagina.classList.add('active');
+        }
+        numeroPagina.textContent = i;
+        numeroPagina.addEventListener('click', () => carregarPokemons(i))
+        container.appendChild(numeroPagina);
+    }
+}
+
+function iniciarPaginacao(){
+    fetch('https://pokeapi.co/api/v2/pokemon?limit=1')
+        .then(response => response.json())
+        .then(data => {
+            console.log(`total de pokemons: ${data.count}`);
+            totalPaginas = Math.ceil(data.count / itensPorPagina);
+            carregarPokemons(1)
+        })
+}
+
+document.querySelector('.botao-voltar').addEventListener('click', ()=>{
+    if(paginaAtual > 1){
+        return carregarPokemons( paginaAtual - 1)
+    }
+}); 
+document.querySelector('.botao-proximo').addEventListener('click', ()=>{
+    if(paginaAtual < totalPaginas){
+        return carregarPokemons( paginaAtual + 1)
+    }
+}) 
+
+
+
+document.addEventListener('DOMContentLoaded', ()=>{
+    iniciarPaginacao();
+    carregarHeroPokemon();
+
+})
+// 
 
 const pokemonOl = document.getElementById('listaPokemon');
 
@@ -192,7 +319,7 @@ pokeApi.pegarDetalhes = (pokemon) => {
   
 }
 
-pokeApi.pegarPokemons = (offset = 0, limite = 20 ) =>{
+pokeApi.pegarPokemons = (offset = 0, limite = 20) =>{
     const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limite}`
 
     return fetch(url)
@@ -207,10 +334,7 @@ pokeApi.pegarPokemons = (offset = 0, limite = 20 ) =>{
 } 
 const abrirPokemon = document.querySelector('.pokemon-hero');
 
-pokeApi.pegarPokemons().then((pokemons = []) => {
-            pokemonOl.innerHTML += pokemons.map(converterPokemon).join('');
-            abrirPokemon.innerHTML += pokemons.map(converterPokemonHero).join('');
-        })
+
 
 
 // JS Para abrir e fechar o Pokemon Hero
@@ -230,6 +354,7 @@ function openPokemonHero(pokemonData) {
     console.log(pokemonData)
     window.scroll(0,0)
     document.querySelector('.seta-fechar').addEventListener('click', closePokemonHero);
+
 }
 
 function closePokemonHero() {
@@ -244,7 +369,7 @@ pokemonList.addEventListener('click', (e) => {
     
     // Obter o ID do Pokémon clicado
     const pokemonId = parseInt(pokemonCard.id);
-    let todosPokemons = []
+
     // Encontrar os dados do Pokémon correspondente
     pokeApi.pegarPokemons().then((pokemons = []) => {
         const todosPokemons = pokemons
@@ -255,3 +380,4 @@ pokemonList.addEventListener('click', (e) => {
 
     });
 });
+
