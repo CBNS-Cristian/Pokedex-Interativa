@@ -42,4 +42,8 @@ Uma aplicação web interativa que simula uma Pokédex, permitindo aos usuários
 Clone o repositório:
 
 ```bash
+<<<<<<< HEAD
 git clone https://github.com/seu-usuario/sua-pokedex.git
+=======
+git clone https://github.com/seu-usuario/sua-pokedex.git
+>>>>>>> e66aeddba5a4837f3eccb68cc3a5bb6b013e6772
