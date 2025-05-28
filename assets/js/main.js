@@ -193,31 +193,36 @@ function carregarPokemons(pagina = 1){
 }
 
 function mudarStatusDetalhes() {
-    const detalheHero = document.getElementById('detalhe-hero');
-    const statusHero = document.getElementById('status-hero');
     
+    function alternarAbas(e, abaClicada){
+        e.preventDefault();
 
-    if (statusHero && detalheHero) {
+        const detalheHero = document.getElementById('detalhe-hero');
+        const statusHero = document.getElementById('status-hero');
+        const menuDetalhes = document.querySelector('.sub-menu-dt');
+        const menuStatus = document.querySelector('.sub-menu-st');
 
-        statusHero.addEventListener('click', (e) => {
-            e.preventDefault(); 
-          const menuDetalhes = document.querySelector('.sub-menu-dt')
-            if(menuDetalhes){
-                menuDetalhes.style.display = 'none'
+        // Alternar classes active
+            detalheHero.classList.toggle('active', abaClicada === 'detalhe');
+            statusHero.classList.toggle('active', abaClicada === 'status');
+            
+            // Alternar exibição dos menus
+                menuDetalhes.style.display = abaClicada === 'detalhe' ? 'flex' : 'none';
+                menuStatus.style.display = abaClicada === 'status' ? 'flex' : 'none';
+            }
+
+        // Configurar event listeners quando o Pokémon Hero é aberto
+        document.addEventListener('click', function(e) {
+            // Verifica se clicou no link de detalhes
+            if (e.target && e.target.id === 'detalhe-hero') {
+                alternarAbas(e, 'detalhe');
             }
             
-            e.currentTarget.classList.toggle('active');
-            
-            console.log('Status ativado!');
+            // Verifica se clicou no link de status
+            if (e.target && e.target.id === 'status-hero') {
+                alternarAbas(e, 'status');
+            }
         });
-
-        console.log(statusHero, detalheHero)
-    } else {
-        console.error('Elementos não encontrados!', {
-            detalheHero: !!detalheHero,
-            statusHero: !!statusHero
-        });
-    }
 }
 
 function carregarHeroPokemon(){
@@ -231,7 +236,6 @@ function carregarHeroPokemon(){
             pokeApi.pegarDetalhes({ url: `https://pokeapi.co/api/v2/pokemon/${pokemonId}/` })
                 .then((pokemon) => {
                     openPokemonHero(pokemon);
-                    mudarStatusDetalhes();
                 });
         });
     });
@@ -355,6 +359,17 @@ function openPokemonHero(pokemonData) {
     window.scroll(0,0)
     document.querySelector('.seta-fechar').addEventListener('click', closePokemonHero);
 
+    setTimeout(() => {
+        mudarStatusDetalhes();
+        
+        // Definir o estado inicial (Detalhes visível)
+        const menuDetalhes = document.querySelector('.sub-menu-dt');
+        const menuStatus = document.querySelector('.sub-menu-st');
+        if (menuDetalhes && menuStatus) {
+            menuDetalhes.style.display = 'flex';
+            menuStatus.style.display = 'none';
+        }
+    }, 50);
 }
 
 function closePokemonHero() {
@@ -380,4 +395,7 @@ pokemonList.addEventListener('click', (e) => {
 
     });
 });
+
+// JS para buscar Pokemons
+
 
