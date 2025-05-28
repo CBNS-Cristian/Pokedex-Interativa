@@ -298,7 +298,7 @@ li.pokemon img{
     flex-wrap: wrap !important;
     gap: 10px;
     text-align: center;
-    font-size: 1.1rem;
+    font-size: 1rem;
     margin: 5px 0;
     border-bottom: 3px solid #00000080;
     border-radius: 3px;
@@ -310,6 +310,7 @@ li.pokemon img{
     border-right: 1px solid #0000005d;
 }
 .detalhes-info span{
+    font-size: 0.8rem;
     display: block;
     margin-bottom: 5px;
     color: #000000;
@@ -465,6 +466,7 @@ li.pokemon img{
         padding: 15px 0;
     }
     .pokemons{
+        
         margin: 0 10px;
         gap: 7px;
     }
@@ -501,7 +503,22 @@ li.pokemon img{
     .detalhes-hero p{
         font-size: 0.8rem;
     }
-
+}
+@media(width < 370px){
+    .pokemon{
+        width: 150px !important;
+    }
+    .fundo{
+        width: 130px;
+        height: 130px;
+    }
+    .fundo-imagem::before{
+    height: 120px;
+    width: 120px;
+}
+    .area-tipo{
+        font-size: 0.8rem;
+    }
 }
 .water{
     border-color: #6890f0 !important;

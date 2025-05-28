@@ -147,7 +147,8 @@ function converterPokemon(novoPokemon){
                 </div>
 
                 <div class="fundo-imagem">
-                <img src="${novoPokemon.imagem[0]}" alt="${novoPokemon.nome}">
+                <img src="${novoPokemon.imagem?.length ? novoPokemon.imagem[0] || novoPokemon.imagem[2] : 'URL_DE_FALLBACK'}" alt="${novoPokemon.nome}">
+
                 <div class="fundo ${novoPokemon.tipos[0]}"></div>
                 </div>
         
